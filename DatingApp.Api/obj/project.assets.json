@@ -12425,11 +12425,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Codes\\C#\\DatingApp\\DatingApp.Api\\DatingApp.Api.csproj",
+      "projectUniqueName": "D:\\Codes\\C Sharp\\DatingApp\\DatingApp.Api\\DatingApp.Api.csproj",
       "projectName": "DatingApp.Api",
-      "projectPath": "d:\\Codes\\C#\\DatingApp\\DatingApp.Api\\DatingApp.Api.csproj",
+      "projectPath": "D:\\Codes\\C Sharp\\DatingApp\\DatingApp.Api\\DatingApp.Api.csproj",
       "packagesPath": "C:\\Users\\peeya\\.nuget\\packages\\",
-      "outputPath": "d:\\Codes\\C#\\DatingApp\\DatingApp.Api\\obj\\",
+      "outputPath": "D:\\Codes\\C Sharp\\DatingApp\\DatingApp.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
