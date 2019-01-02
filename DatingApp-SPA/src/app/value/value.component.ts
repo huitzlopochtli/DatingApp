@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-value',
@@ -9,9 +10,27 @@ export class ValueComponent implements OnInit {
 
   values: any;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    this.getValues();
+  }
+
+  getValues() {
+    this.http.get('http://localhost:5000/api/values')
+      .subscribe(res => {
+        console.log('====================================');
+        console.log(res);
+        console.log('====================================');
+        this.values = res;
+      }, error => {
+        if (error.status === 401) {
+          alert('Unauthorize');
+        }
+        console.log('====================================');
+        console.log(error);
+        console.log('====================================');
+      });
   }
 
 }
