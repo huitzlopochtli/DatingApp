@@ -28,9 +28,6 @@ export class RegisterComponent implements OnInit {
       alert(error.error);
       console.log('====================================');
     });
-
-
-
   }
 
   cancel() {
