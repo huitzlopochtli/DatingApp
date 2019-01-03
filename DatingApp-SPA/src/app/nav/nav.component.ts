@@ -24,8 +24,9 @@ export class NavComponent implements OnInit {
         console.log('LOGGED IN!');
         console.log('====================================');
       }, error => {
+        alert('Username or password incorrect');
         console.log('====================================');
-        console.log('ERROR');
+        console.log('ERROR', error);
         console.log('====================================');
       });
   }
