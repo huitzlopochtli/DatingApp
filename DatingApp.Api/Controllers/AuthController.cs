@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DatingApp.Api.Data;
 using DatingApp.Api.DTOs;
 using DatingApp.Api.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -49,7 +50,7 @@ namespace DatingApp.Api.Controllers
             if (userFromRepo == null)
                 return Unauthorized();
 
-
+            
             var token = Security.Security.GenerateLoginToken(userFromRepo, _config);
 
             return Ok(token); 
