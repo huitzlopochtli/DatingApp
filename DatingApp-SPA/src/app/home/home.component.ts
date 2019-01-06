@@ -1,5 +1,7 @@
+import { AuthService } from './../_services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,32 +14,17 @@ export class HomeComponent implements OnInit {
   values: any;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService, private r: Router) { }
 
   ngOnInit() {
+    if (this.authService.loggedIn()){
+      this.r.navigate(['/members']);
+    }
   }
 
   registerToggle() {
     this.registerMode = !this.registerMode;
     console.log('Registration Mode: ', this.registerMode);
   }
-
-
-  // getValues() {
-  //   this.http.get('http://localhost:5000/api/values')
-  //     .subscribe(res => {
-  //       console.log('====================================');
-  //       console.log(res);
-  //       console.log('====================================');
-  //       this.values = res;
-  //     }, error => {
-  //       if (error.status === 401) {
-  //         alert('Unauthorize');
-  //       }
-  //       console.log('====================================');
-  //       console.log(error);
-  //       console.log('====================================');
-  //     });
-  // }
 
 }
