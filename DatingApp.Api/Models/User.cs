@@ -38,6 +38,7 @@ namespace DatingApp.Api.Models
         public string LookingFor { get; set; }
         public string Interestes { get; set; }
         public City City { get; set; }
+        public int CityId { get; set; }
         public ICollection<Photo> Photos { get; set; }
 
 

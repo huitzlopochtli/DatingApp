@@ -29,7 +29,9 @@ namespace DatingApp.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _repo.GetAllAsync<User>();
+            var users = await _repo.GetAllAsync<User>(includeProperties: "Photos,City,City.Country");
+
+            users = users.Where(u => u.IsDeleted == false);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
@@ -39,7 +41,7 @@ namespace DatingApp.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = (User)await _repo.GetOneAsync<User>(filter: u=> u.Id == id, includeProperties: "Photos");
+            var user = (User)await _repo.GetOneAsync<User>(filter: u=> u.Id == id && u.IsDeleted == false, includeProperties: "City,Photos,City.Country");
 
             var userToReturn = _mapper.Map<UserDetailDto>(user);
 
