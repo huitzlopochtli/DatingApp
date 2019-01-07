@@ -1,0 +1,42 @@
+[
+  {
+    "CityName": "Tampico",
+    "CountryId": 1
+  },
+  {
+    "CityName": "Cazadero",
+    "CountryId": 2
+  },
+  {
+    "CityName": "Lopezo",
+    "CountryId": 8
+  },
+  {
+    "CityName": "Boling",
+    "CountryId": 1
+  },
+  {
+    "CityName": "Dragoon",
+    "CountryId": 9
+  },
+  {
+    "CityName": "Warsaw",
+    "CountryId": 9
+  },
+  {
+    "CityName": "Whitewater",
+    "CountryId": 4
+  },
+  {
+    "CityName": "Naomi",
+    "CountryId": 8
+  },
+  {
+    "CityName": "Vienna",
+    "CountryId": 9
+  },
+  {
+    "CityName": "Shepardsville",
+    "CountryId": 6
+  }
+]

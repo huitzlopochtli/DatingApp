@@ -12,7 +12,6 @@ namespace DatingApp.Api.Models
         public bool IsProfilePhoto { get; set; }
 
         public User User { get; set; }
-        [ForeignKey("User")]
         public int UserId { get; set; }
     }
 }

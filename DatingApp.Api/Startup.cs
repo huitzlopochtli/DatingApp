@@ -34,15 +34,20 @@ namespace DatingApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
             //Insert DataContext
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("Development")));
+            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("Development")));
 
             //Insert AutoRepostory
             services.AddScoped<IAuthRepository, AuthRepository>();
 
-
+            //Data Repository
+            services.AddScoped<IRepository, Repository<DataContext>>();
 
             //Insert Unit of work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -69,8 +74,7 @@ namespace DatingApp.Api
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
+            }).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
@@ -83,12 +87,13 @@ namespace DatingApp.Api
                     ValidateAudience = false
                 };
             });
+            // Seed Data
+            services.AddTransient<Seed>();
 
-                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -98,7 +103,7 @@ namespace DatingApp.Api
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 // app.UseHsts();
-                
+
                 app.UseExceptionHandler(builder =>
                 {
                     builder.Run(async context =>
@@ -123,8 +128,11 @@ namespace DatingApp.Api
                 .AllowAnyHeader());
 
             app.UseAuthentication();
-            
+
             app.UseMvc();
+
+            //Added Seeder
+            //seeder.SeedUsers();
         }
     }
 }

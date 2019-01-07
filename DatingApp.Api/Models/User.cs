@@ -10,7 +10,6 @@ namespace DatingApp.Api.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public Gender Gender { get; set; }
-        [ForeignKey("Gender")]
         public int GenderId { get; set; }
         public string KnownAs { get; set; }
         public DateTime DateOfBirth
@@ -38,7 +37,7 @@ namespace DatingApp.Api.Models
         public string Introduction { get; set; }
         public string LookingFor { get; set; }
         public string Interestes { get; set; }
-        public Country Country { get; set; }
+        public City City { get; set; }
         public ICollection<Photo> Photos { get; set; }
 
 
