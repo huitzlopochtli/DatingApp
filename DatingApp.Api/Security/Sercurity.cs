@@ -53,7 +53,7 @@ namespace DatingApp.Api.Security
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claimes),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = creds
             };
 
@@ -63,11 +63,11 @@ namespace DatingApp.Api.Security
             //Create token
             var token = tokenHandlr.CreateToken(tokenDescriptor);
 
-            return new 
+            return new
             {
                 //Write the token
                 token = tokenHandlr.WriteToken(token)
-            }; 
+            };
         }
     }
 }

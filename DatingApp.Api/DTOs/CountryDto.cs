@@ -1,6 +1,6 @@
 namespace DatingApp.Api.DTOs
 {
-    public class CountryWOCityDto : DtoAbstruct
+    public class CountryDto : DtoAbstruct
     {
         public string CountryName { get; set; }
     }

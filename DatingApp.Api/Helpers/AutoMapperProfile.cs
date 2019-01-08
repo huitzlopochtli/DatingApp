@@ -29,7 +29,9 @@ namespace DatingApp.Api.Helpers
 
             CreateMap<City, CityDto>();
 
-            CreateMap<Country, CountryWOCityDto>();
+            CreateMap<Country, CountryDto>();
+
+            CreateMap<Gender, GenderDto>();
         }
     }
 }
