@@ -12,17 +12,7 @@ namespace DatingApp.Api.Models
         public Gender Gender { get; set; }
         public int GenderId { get; set; }
         public string KnownAs { get; set; }
-        public DateTime DateOfBirth
-        {
-            get
-            {
-                return this.dateCreated.HasValue
-                   ? this.dateCreated.Value
-                   : DateTime.Now;
-            }
-
-            set { this.dateCreated = value; }
-        }
+        public DateTime DateOfBirth{ get; set;}
         public DateTime LastActivity
         {
             get
@@ -40,7 +30,6 @@ namespace DatingApp.Api.Models
         public City City { get; set; }
         public int CityId { get; set; }
         public ICollection<Photo> Photos { get; set; }
-
 
     }
 }

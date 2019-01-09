@@ -8,6 +8,7 @@ namespace DatingApp.Api.DTOs
     {
         public string Username { get; set; }
         public GenderDto Gender { get; set; }
+        public int GenderId { get; set; }
         public string KnownAs { get; set; }
         public int Age { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -16,6 +17,7 @@ namespace DatingApp.Api.DTOs
         public string LookingFor { get; set; }
         public string Interestes { get; set; }
         public CityDto City { get; set; }
+        public int CityId { get; set; }
         public string PhotoUrl { get; set; }
         public ICollection<PhotoDto> Photos { get; set; }
     }

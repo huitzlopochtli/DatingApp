@@ -52,7 +52,7 @@ export class NavComponent implements OnInit {
     console.log('LOGGED OUT!');
     console.log('====================================');
     this.alertify.warning('Logged out');
-    this.router.navigate(['/home']);
+    this.router.navigate(['']);
   }
 }
 
