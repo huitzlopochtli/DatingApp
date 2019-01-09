@@ -85,6 +85,8 @@ namespace DatingApp.Api
             services.AddTransient<Seed>();
 
             services.AddAutoMapper(typeof(Startup));
+            // CloudinarySettings
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

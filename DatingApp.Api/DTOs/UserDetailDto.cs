@@ -19,6 +19,6 @@ namespace DatingApp.Api.DTOs
         public CityDto City { get; set; }
         public int CityId { get; set; }
         public string PhotoUrl { get; set; }
-        public ICollection<PhotoDto> Photos { get; set; }
+        public ICollection<PhotoForDetailDto> Photos { get; set; }
     }
 }
