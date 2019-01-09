@@ -38,7 +38,6 @@ export class MemberEditComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => (this.user = data['user']));
-    console.log(this.user);
 
     this.locationService.getCoutries().subscribe(countries => {
       this.countries = countries;
@@ -58,7 +57,6 @@ export class MemberEditComponent implements OnInit {
           this.countries[i].cities.length > 0 ? this.countries[i].cities : null;
       }
     }
-    console.log(this.user);
   }
 
   updateUser() {
@@ -74,9 +72,7 @@ export class MemberEditComponent implements OnInit {
           'user.city.country.id': +this.user.city.country.id
         });
       }, error => {
-        console.log(error);
         this.alertify.error(error);
       });
-    console.log(this.user);
   }
 }

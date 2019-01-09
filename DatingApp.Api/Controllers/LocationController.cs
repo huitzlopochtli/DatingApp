@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.Api.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
 
