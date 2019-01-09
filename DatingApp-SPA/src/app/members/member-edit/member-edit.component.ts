@@ -1,3 +1,5 @@
+import { AuthService } from './../../_services/auth.service';
+import { UserService } from 'src/app/_services/user.service';
 import { Country } from './../../_models/country';
 import { LocationService } from './../../_services/location.service';
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
@@ -29,7 +31,9 @@ export class MemberEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private locationService: LocationService,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -58,14 +62,21 @@ export class MemberEditComponent implements OnInit {
   }
 
   updateUser() {
+    this.userService
+      .updateUser(this.authService.decodedToken.nameid, this.user)
+      .subscribe(next => {
+        this.alertify.success('Profile updated successfully');
+        this.editForm.reset({
+          introduction: this.user.introduction,
+          lookingFor: this.user.lookingFor,
+          interestes: this.user.interestes,
+          'user.cityId': +this.user.cityId,
+          'user.city.country.id': +this.user.city.country.id
+        });
+      }, error => {
+        console.log(error);
+        this.alertify.error(error);
+      });
     console.log(this.user);
-    this.alertify.success('Profile updated successfully');
-    this.editForm.reset({
-      introduction: this.user.introduction,
-      lookingFor: this.user.lookingFor,
-      interestes: this.user.interestes,
-      'user.cityId': +this.user.cityId,
-      'user.city.country.id': +this.user.city.country.id
-    });
   }
 }
