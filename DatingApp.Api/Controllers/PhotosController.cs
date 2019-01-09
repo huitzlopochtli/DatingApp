@@ -33,7 +33,8 @@ namespace DatingApp.Api.Controllers
             this._repository = repository;
             this._unitOfWork = unitOfWork;
 
-            Account acc = new Account{
+            Account acc = new Account
+            {
                 Cloud = _cloudinaryConfig.Value.CloudName,
                 ApiKey = _cloudinaryConfig.Value.ApiKey,
                 ApiSecret = _cloudinaryConfig.Value.ApiSecret
@@ -42,7 +43,7 @@ namespace DatingApp.Api.Controllers
             _cloudinary = new Cloudinary(acc);
         }
 
-        [HttpGet("{id}", Name="GetPhoto")]
+        [HttpGet("{id}", Name = "GetPhoto")]
         public async Task<IActionResult> GetPhoto(int id)
         {
             var photoFromRepo = await _repository.GetOneAsync<Photo>(filter: p => p.Id == id && !p.IsDeleted);
@@ -56,17 +57,18 @@ namespace DatingApp.Api.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var userFromRepo = await _repository.GetOneAsync<User>(filter: u => u.Id == userId ,includeProperties: "Photos");
+            var userFromRepo = await _repository.GetOneAsync<User>(filter: u => u.Id == userId, includeProperties: "Photos");
 
             var file = photoForCreationDto.File;
 
             var uploadResult = new ImageUploadResult();
 
-            if(file.Length > 0)
+            if (file.Length > 0)
             {
                 using (var stream = file.OpenReadStream())
                 {
-                    var uploadParams = new ImageUploadParams(){
+                    var uploadParams = new ImageUploadParams()
+                    {
                         File = new FileDescription(file.Name, stream),
                         Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
                     };
@@ -79,18 +81,43 @@ namespace DatingApp.Api.Controllers
             photoForCreationDto.PublicId = uploadResult.PublicId;
 
             var photo = _mapper.Map<Photo>(photoForCreationDto);
-            if(!userFromRepo.Photos.Any(u => u.IsProfilePhoto))
+            if (!userFromRepo.Photos.Any(u => u.IsProfilePhoto))
                 photo.IsProfilePhoto = true;
 
             userFromRepo.Photos.Add(photo);
 
 
-            if(await _unitOfWork.SaveChangesAsync())
+            if (await _unitOfWork.SaveChangesAsync())
             {
                 var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
-                return CreatedAtRoute("GetPhoto", new {id = photo.Id}, photoToReturn);
+                return CreatedAtRoute("GetPhoto", new { id = photo.Id }, photoToReturn);
             }
             return BadRequest("Could not add the photo");
+        }
+
+        [HttpPost("{id}/setMain")]
+        public async Task<IActionResult> SetMainPhoto(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repository.GetOneAsync<User>(filter: u => u.Id == userId, includeProperties: "Photos");
+            if (!userFromRepo.Photos.Any(p => p.Id == id))
+                return Unauthorized();
+
+            var photoFromRepo = await _repository.GetOneAsync<Photo>(filter: p => p.Id == id);
+            if (photoFromRepo.IsProfilePhoto)
+                return BadRequest("Aleady profile photo!");
+
+            var currentProfilePhoto = await _repository.GetOneAsync<Photo>(filter: p => p.UserId == userId && p.IsProfilePhoto);
+            currentProfilePhoto.IsProfilePhoto = false;
+
+            photoFromRepo.IsProfilePhoto = true;
+
+            if(await _unitOfWork.SaveChangesAsync())
+                return NoContent();
+
+            return BadRequest("Could not set photo to profile photo");
         }
 
     }
