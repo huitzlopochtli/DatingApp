@@ -20,6 +20,7 @@ export class MemberEditComponent implements OnInit {
   user: User;
   countries: Country[];
   cities: City[];
+  photoUrl: string;
   @ViewChild('editForm') editForm: NgForm;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -47,6 +48,8 @@ export class MemberEditComponent implements OnInit {
         }
       }
     });
+
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
   changeCities() {

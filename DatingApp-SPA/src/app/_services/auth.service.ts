@@ -15,6 +15,8 @@ export class AuthService {
   jwtHelper = new JwtHelperService();
   decodedToken: any;
   currentUser: User;
+  photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+  currentPhotoUrl = this.photoUrl.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -29,6 +31,7 @@ export class AuthService {
             this.decodedToken = this.jwtHelper.decodeToken(response.token);
             this.currentUser = response.loggedInUser;
             console.log('decoded token: ', this.decodedToken);
+            this.changeMemberPhoto(this.currentUser.photoUrl);
           }
         })
       );
@@ -44,6 +47,10 @@ export class AuthService {
       this.decodedToken = this.jwtHelper.decodeToken(token);
     }
     return !this.jwtHelper.isTokenExpired(token) && token;
+  }
+
+  changeMemberPhoto(photoUrl: string){
+    this.photoUrl.next(photoUrl);
   }
 }
 

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class NavComponent implements OnInit {
 
   loginModel: any = {};
+  photoUrl: string;
 
 
   constructor( public authService: AuthService,
@@ -18,6 +19,7 @@ export class NavComponent implements OnInit {
     private router: Router ) { }
 
   ngOnInit() {
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
 
