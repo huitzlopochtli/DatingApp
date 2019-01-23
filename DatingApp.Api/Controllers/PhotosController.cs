@@ -114,10 +114,45 @@ namespace DatingApp.Api.Controllers
 
             photoFromRepo.IsProfilePhoto = true;
 
-            if(await _unitOfWork.SaveChangesAsync())
+            if (await _unitOfWork.SaveChangesAsync())
                 return NoContent();
 
             return BadRequest("Could not set photo to profile photo");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhoto(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repository.GetOneAsync<User>(filter: u => u.Id == userId, includeProperties: "Photos");
+            if (!userFromRepo.Photos.Any(p => p.Id == id))
+                return Unauthorized();
+
+            var photoFromRepo = await _repository.GetOneAsync<Photo>(filter: p => p.Id == id);
+            if (photoFromRepo.IsProfilePhoto)
+                return BadRequest("You cannot delete your main photo");
+
+            if (photoFromRepo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photoFromRepo.PublicId);
+
+                var result = _cloudinary.Destroy(deleteParams);
+                if (result.Result == "ok")
+                    _repository.Delete<Photo>(photoFromRepo);
+            }
+            else
+            {
+                 _repository.Delete<Photo>(photoFromRepo);
+            }
+
+
+            if (await _unitOfWork.SaveChangesAsync())
+                return Ok();
+
+            return BadRequest("Failed to delete the photo");
+
         }
 
     }

@@ -7,11 +7,18 @@
         class="btn btn-sm mr-2"
         (click)="setMainPhoto(photo)"
         [disabled]="photo.isProfilePhoto"
-        [ngClass]="photo.isProfilePhoto ? 'btn-success active' : 'btn-secondary'"
+        [ngClass]="
+          photo.isProfilePhoto ? 'btn-success active' : 'btn-secondary'
+        "
       >
         Main
       </button>
-      <button type="button" class="btn btn-sm btn-danger">
+      <button
+        type="button"
+        class="btn btn-sm btn-danger"
+        [disabled]="photo.isProfilePhoto"
+        (click)="deletePhoto(photo.id)"
+      >
         <i class="fa fa-trash"></i>
       </button>
     </div>
