@@ -84,8 +84,5 @@ export class PhotoEditorComponent implements OnInit {
         }
       );
 
-    // this.alertify.confirm('Confirm Message', function onok() {
-    //   this.alertify.success('Ok');
-    // });
   }
 }

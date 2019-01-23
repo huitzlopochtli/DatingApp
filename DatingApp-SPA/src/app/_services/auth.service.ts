@@ -1,4 +1,6 @@
+import { User } from './../_models/user';
 import { environment } from './../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -12,6 +14,7 @@ export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
+  currentUser: User;
 
   constructor(private http: HttpClient) { }
 
@@ -19,28 +22,16 @@ export class AuthService {
     return this.http.post(this.baseUrl + 'login', model)
       .pipe(
         map(res => {
-          const user: any = res;
-          if (user) {
-            localStorage.setItem('token' , user.token);
-            this.decodedToken = this.jwtHelper.decodeToken(user.token);
+          const response: any = res;
+          if (response) {
+            localStorage.setItem('token' , response.token);
+            localStorage.setItem('currentUser' , JSON.stringify(response.loggedInUser));
+            this.decodedToken = this.jwtHelper.decodeToken(response.token);
+            this.currentUser = response.loggedInUser;
             console.log('decoded token: ', this.decodedToken);
           }
         })
       );
-
-    // Same can be done by this but
-    // https://stackoverflow.com/questions/51269372/difference-beetwen-pipe-and-subscribe
-    // So that we can subscribe to this observable later
-    // return this.http.post(this.baseUrl + 'login', model)
-    //   .subscribe(res => {
-    //     console.log('====================================');
-    //     console.log(res);
-    //     console.log('====================================');
-    //   }, error => {
-    //     console.log('====================================');
-    //     console.log(error);
-    //     console.log('====================================');
-    //   });
   }
 
   register(registerModel: any) {

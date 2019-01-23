@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using DatingApp.Api.DTOs;
 using DatingApp.Api.Models;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,7 @@ namespace DatingApp.Api.Security
             return true;
         }
 
-        public static Object GenerateLoginToken(User userFromRepo, IConfiguration _config)
+        public static Object GenerateLoginToken(User userFromRepo, IConfiguration _config, IMapper _mapper)
         {
             //Add the users credentials to a claims list
             var claimes = new[]{
@@ -63,10 +64,13 @@ namespace DatingApp.Api.Security
             //Create token
             var token = tokenHandlr.CreateToken(tokenDescriptor);
 
+            var user = _mapper.Map<UserForListDto>(userFromRepo);
+
             return new
             {
                 //Write the token
-                token = tokenHandlr.WriteToken(token)
+                token = tokenHandlr.WriteToken(token),
+                loggedInUser = user
             };
         }
     }

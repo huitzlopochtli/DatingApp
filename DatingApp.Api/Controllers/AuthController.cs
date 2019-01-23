@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.Api.Data;
 using DatingApp.Api.DTOs;
 using DatingApp.Api.Models;
@@ -17,9 +18,16 @@ namespace DatingApp.Api.Controllers
         private readonly IAuthRepository _auth;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository auth, IUnitOfWork unitOfWork, IConfiguration config)
+        private readonly IMapper _mapper;
+
+        public AuthController(
+            IAuthRepository auth,
+            IUnitOfWork unitOfWork,
+            IConfiguration config,
+            IMapper mapper)
         {
             this._config = config;
+            this._mapper = mapper;
             this._unitOfWork = unitOfWork;
             this._auth = auth;
         }
@@ -50,10 +58,10 @@ namespace DatingApp.Api.Controllers
             if (userFromRepo == null)
                 return Unauthorized();
 
-            
-            var token = Security.Security.GenerateLoginToken(userFromRepo, _config);
 
-            return Ok(token); 
+            var token = Security.Security.GenerateLoginToken(userFromRepo, _config, _mapper);
+
+            return Ok(token);
         }
     }
 }
