@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { Country } from '../_models/country';
 import { City } from '../_models/city';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
   registerModel: any = {};
   registerForm: FormGroup;
+  bsConfig: Partial<BsDatepickerConfig>;
 
   countries: Country[];
   cities: City[];
@@ -39,6 +41,9 @@ export class RegisterComponent implements OnInit {
       this.cities = this.countries[0].cities;
     console.log(this.countries, this.cities);
     });
+    this.bsConfig = {
+      containerClass: 'theme-red'
+    };
   }
 
   passwordMatchValidator(g: FormGroup) {
