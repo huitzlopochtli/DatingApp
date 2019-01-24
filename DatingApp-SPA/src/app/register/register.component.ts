@@ -1,3 +1,4 @@
+import { User } from './../_models/user';
 import { LocationService } from './../_services/location.service';
 import { AlertifyService } from './../_services/alertify.service';
 import { AuthService } from './../_services/auth.service';
@@ -11,6 +12,7 @@ import {
 import { Country } from '../_models/country';
 import { City } from '../_models/city';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +22,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 export class RegisterComponent implements OnInit {
   // @Input() valuesFromHome: any;
   @Output() cancelRegister = new EventEmitter();
-  registerModel: any = {};
+  user: User;
   registerForm: FormGroup;
   bsConfig: Partial<BsDatepickerConfig>;
 
@@ -31,7 +33,8 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -39,7 +42,7 @@ export class RegisterComponent implements OnInit {
     this.locationService.getCoutries().subscribe(countries => {
       this.countries = countries;
       this.cities = this.countries[0].cities;
-    console.log(this.countries, this.cities);
+      console.log(this.countries, this.cities);
     });
     this.bsConfig = {
       containerClass: 'theme-red'
@@ -59,8 +62,8 @@ export class RegisterComponent implements OnInit {
         username: ['', Validators.required],
         knownAs: ['', Validators.required],
         dateOfBirth: [null, Validators.required],
-        cityId: ['0', Validators.required],
-        country: ['0', Validators.required],
+        cityId: ['0'],
+        country: ['0'],
         password: [
           '',
           [
@@ -76,15 +79,18 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    // this.authService.register(this.registerModel).subscribe(res => {
-    //   console.log('REGISTERED!', res, this.registerModel);
-    //   this.alertify.success('Registered successful');
-    // }
-    // , error => {
-    //   console.log('REGISTRATION ERROR!', error);
-    //   this.alertify.error(error);
-    // }
-    // );
+    if (this.registerForm.valid) {
+      this.user = Object.assign({}, this.registerForm.value);
+      this.authService.register(this.user).subscribe(() =>{
+        this.alertify.success('Registration successful');
+      }, error => {
+        this.alertify.error(error);
+      }, () => {
+        this.authService.login(this.user).subscribe(() => {
+          this.router.navigate(['/members']);
+        });
+      });
+    }
     console.log(this.registerForm.value);
   }
 
