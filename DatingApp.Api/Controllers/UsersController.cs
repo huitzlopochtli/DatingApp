@@ -42,7 +42,7 @@ namespace DatingApp.Api.Controllers
             return Ok(usersToReturn);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name="GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = (User)await _repo.GetOneAsync<User>(filter: u => u.Id == id && u.IsDeleted == false, includeProperties: "Gender,City,Photos,City.Country");
