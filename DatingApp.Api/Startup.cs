@@ -42,6 +42,7 @@ namespace DatingApp.Api
 
             //Data Repository
             services.AddScoped<IRepository, Repository<DataContext>>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             //Insert Unit of work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

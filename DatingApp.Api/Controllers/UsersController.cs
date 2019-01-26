@@ -21,30 +21,38 @@ namespace DatingApp.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IRepository _repo;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UsersController(IRepository repo, IMapper mapper, IUnitOfWork unitOfWork)
+        public UsersController(IRepository repo,
+            IUserRepository userRepository,
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
             this._repo = repo;
+            this._userRepository = userRepository;
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _repo.GetAsync<User>(filter: u => !u.IsDeleted && u.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), includeProperties: "Gender,Photos,City,City.Country");
-
-            users = users.Where(u => u.IsDeleted == false);
+            var users = await _userRepository.GetUsers(userParams);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            Response.AddPagination(users.CurrentPage,
+                users.PageSize,
+                users.TotalCount,
+                users.TotalPages);
 
             return Ok(usersToReturn);
         }
 
-        [HttpGet("{id}", Name="GetUser")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = (User)await _repo.GetOneAsync<User>(filter: u => u.Id == id && u.IsDeleted == false, includeProperties: "Gender,City,Photos,City.Country");
